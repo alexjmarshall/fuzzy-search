@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <HelloWorld/>
+    <FuzzySearch/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import FuzzySearch from './components/FuzzySearch.vue'
 
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    FuzzySearch
   }
 }
 </script>

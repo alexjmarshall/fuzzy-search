@@ -2,8 +2,8 @@
   <div class="columns is-desktop">
     <div class="column">
       <h1 class="title">Original Title</h1>
-      <p>{{ originalTitle }}</p>
-      <button class="button field is-link" @click="submit">
+      <p>{{ count === originalTitles.length - 1 ? 'END' : originalTitle }}</p>
+      <button class="button field is-link" @click="submit" style="margin-top: 1rem;">
             <span>Next</span>
         </button>
     </div>
@@ -31,6 +31,7 @@ export default {
       count: 0,
       originalTitles: [],
       correctTitles: [],
+      updatedTitles: [],
       selected: null,
       columns: [
         {
@@ -62,8 +63,6 @@ export default {
   computed: {
     originalTitle () {
       if(this.originalTitles.length) {
-        if(this.count === this.originalTitles.length - 1)
-          return 'END'
         return this.originalTitles[this.count].title.toString()
       }
       return 'loading...'
@@ -71,8 +70,13 @@ export default {
     filteredDataObj () {
       if(this.fuse && this.originalTitles.length && this.correctTitles.length) {
         let originalTitle = this.originalTitles[this.count].title.toString()
-        let result = this.fuse.search(originalTitle);
-        return result
+        if(this.count === this.originalTitles.length - 1)
+          return []
+        let top3 = this.fuse.search(originalTitle).slice(0,3)
+        return top3.map(r => {
+          r.score = Math.round((1 - r.score) * 100) + '%'
+          return r
+        })
       }
       return this.correctTitles
     }
@@ -80,6 +84,7 @@ export default {
   methods: {
     submit () {
       this.count++;
+      this.updatedTitles.push(this.selected.item)
     }
   },
   mounted () {
